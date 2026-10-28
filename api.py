@@ -341,3 +341,26 @@ def get_fairness():
 @app.get("/stats", tags=["System"])
 def get_stats():
     return audit.get_summary_stats()
+
+
+class TextAuditRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=10000)
+
+
+@app.post("/analyze-text", tags=["NLP Audit"])
+def analyze_text_endpoint(req: TextAuditRequest):
+    from text_analyzer import analyze_ai_text
+    res = analyze_ai_text(req.text)
+    return {
+        "detected_decision": res.detected_decision,
+        "decision_confidence": res.decision_confidence,
+        "decision_snippet": res.decision_snippet,
+        "requires_human_review": res.requires_human_review,
+        "review_urgency": res.review_urgency,
+        "fairness_status": res.fairness_status,
+        "fairness_flags": res.fairness_flags,
+        "reasons_for_review": res.reasons_for_review,
+        "positive_indicators": res.positive_indicators,
+        "summary": res.summary,
+        "future_scope": res.future_scope,
+    }
