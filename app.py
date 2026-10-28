@@ -187,7 +187,8 @@ def backend_alive() -> bool:
 
 
 def show_backend_status():
-    if not backend_alive():
+    # Only show warning banner if explicitly enabled in environment
+    if os.getenv("CHECK_BACKEND", "0") == "1" and not backend_alive():
         st.markdown(
             '<div class="warn-banner">Backend API is not reachable at '
             f'{API_BASE}. Run: <code>uvicorn api:app --reload --port 8000</code>'

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  responsible-ai-platform:
+    build: .
+    container_name: responsible_ai_app
+    ports:
+      - "8501:8501"
+      - "8000:8000"
+    environment:
+      - API_BASE_URL=http://localhost:8000
+      - API_KEY=dev-insecure-key-change-me
+    restart: unless-stopped
