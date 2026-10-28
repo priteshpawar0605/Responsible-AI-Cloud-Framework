@@ -1,5 +1,5 @@
 """
-app.py — Streamlit dashboard for the Responsible AI Framework.
+app.py -- Streamlit dashboard for the Responsible AI Framework.
 
 Start with:
     streamlit run app.py
@@ -43,179 +43,217 @@ TEXT_SEC  = "#77796F"
 ACCENT    = "#536B4F"
 WARNING   = "#A66B32"
 BORDER    = "#E0DFD7"
+DANGER    = "#B04020"
 
 CUSTOM_CSS = f"""
 <style>
+/* ---- Google Fonts import ---- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* ---- Reset & base ---- */
 html, body, [data-testid="stAppViewContainer"] {{
     background-color: {BG};
     color: {TEXT_MAIN};
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 14px;
+    -webkit-font-smoothing: antialiased;
 }}
 
-/* ---- Hide Default Streamlit Sidebar & Collapse Control for Web App Feel ---- */
-[data-testid="stSidebar"] {{
-    display: none !important;
-}}
-[data-testid="collapsedControl"] {{
-    display: none !important;
-}}
+/* ---- Hide Default Streamlit Sidebar & Collapse Control ---- */
+[data-testid="stSidebar"],
+[data-testid="collapsedControl"],
 section[data-testid="stSidebar"] {{
     display: none !important;
 }}
 
-/* ---- Center and constrain max-width for web application layout ---- */
+/* ---- Center and constrain max-width ---- */
 .main .block-container {{
-    max-width: 1080px !important;
-    padding-top: 1.5rem !important;
-    padding-bottom: 3.5rem !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    max-width: 960px !important;
+    padding-top: 1.2rem !important;
+    padding-bottom: 3rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
     margin: 0 auto !important;
 }}
 
-/* ---- Web App Navbar Tabs ---- */
+/* ---- Tab Navigation ---- */
 .stTabs [data-baseweb="tab-list"] {{
-    gap: 8px;
-    background-color: transparent;
-    border-bottom: 1px solid {BORDER};
-    padding-bottom: 0px;
-    margin-bottom: 24px;
+    gap: 0;
+    background-color: {SURFACE};
+    border: 1px solid {BORDER};
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 28px;
 }}
 .stTabs [data-baseweb="tab"] {{
-    height: 42px;
-    padding: 0 18px;
-    border-radius: 6px 6px 0 0;
-    font-size: 14px;
+    height: 38px;
+    padding: 0 28px;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 500;
     color: {TEXT_SEC};
     background-color: transparent;
     border: none;
-    transition: all 0.15s ease-in-out;
+    transition: all 0.2s ease;
 }}
 .stTabs [data-baseweb="tab"]:hover {{
     color: {TEXT_MAIN};
-    background-color: rgba(0,0,0,0.02);
+    background-color: rgba(0,0,0,0.025);
 }}
 .stTabs [aria-selected="true"] {{
-    color: {TEXT_MAIN} !important;
+    color: {SURFACE} !important;
     font-weight: 600 !important;
-    border-bottom: 2px solid {ACCENT} !important;
+    background-color: {ACCENT} !important;
+    border-bottom: none !important;
+    box-shadow: 0 1px 3px rgba(83,107,79,0.25);
+}}
+.stTabs [data-baseweb="tab-highlight"] {{
+    display: none !important;
+}}
+.stTabs [data-baseweb="tab-border"] {{
+    display: none !important;
 }}
 
 /* ---- Main headers ---- */
-h1 {{ font-size: 22px; font-weight: 700; color: {TEXT_MAIN}; margin-bottom: 4px; }}
-h2 {{ font-size: 18px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 14px; margin-bottom: 6px; }}
-h3 {{ font-size: 15px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 10px; margin-bottom: 4px; }}
+h1 {{ font-size: 22px; font-weight: 700; color: {TEXT_MAIN}; margin-bottom: 2px; letter-spacing: -0.3px; }}
+h2 {{ font-size: 18px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 12px; margin-bottom: 4px; }}
+h3 {{ font-size: 15px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 8px; margin-bottom: 4px; }}
 
-/* ---- Web App Surface Cards ---- */
+/* ---- Surface Cards ---- */
 .panel {{
     background: {SURFACE};
     border: 1px solid {BORDER};
-    border-radius: 8px;
-    padding: 16px 20px;
+    border-radius: 10px;
+    padding: 18px 22px;
     margin-bottom: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    transition: box-shadow 0.15s ease;
+}}
+.panel:hover {{
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }}
 .panel-title {{
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: {TEXT_SEC};
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }}
 
-/* ---- Modern Text Area ---- */
+/* ---- Text Area ---- */
 .stTextArea textarea {{
-    background-color: #FFFFFF !important;
+    background-color: {SURFACE} !important;
     border: 1px solid {BORDER} !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     font-size: 14px !important;
     color: {TEXT_MAIN} !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+    padding: 14px !important;
+    line-height: 1.6 !important;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.03) !important;
 }}
 .stTextArea textarea:focus {{
     border-color: {ACCENT} !important;
-    box-shadow: 0 0 0 2px rgba(83, 107, 79, 0.15) !important;
+    box-shadow: 0 0 0 3px rgba(83, 107, 79, 0.12) !important;
+}}
+.stTextArea label {{
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: {TEXT_SEC} !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
 }}
 
 /* ---- Primary Button ---- */
 .stButton button[kind="primary"] {{
     background-color: {ACCENT} !important;
-    color: #FFFFFF !important;
+    color: {SURFACE} !important;
     border: none !important;
-    border-radius: 6px !important;
-    padding: 8px 24px !important;
+    border-radius: 8px !important;
+    padding: 10px 28px !important;
     font-weight: 600 !important;
-    font-size: 14px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important;
+    font-size: 13px !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 1px 3px rgba(83,107,79,0.2) !important;
+    transition: all 0.15s ease !important;
 }}
 .stButton button[kind="primary"]:hover {{
     background-color: #42553F !important;
+    box-shadow: 0 2px 6px rgba(83,107,79,0.3) !important;
+    transform: translateY(-1px) !important;
 }}
 
-/* ---- Secondary Button ---- */
-.stButton button {{
-    border-radius: 6px !important;
-    font-size: 13px !important;
+/* ---- Secondary / Download Button ---- */
+.stButton button, .stDownloadButton button {{
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
     border: 1px solid {BORDER} !important;
-    background-color: #FFFFFF !important;
+    background-color: {SURFACE} !important;
     color: {TEXT_MAIN} !important;
+    padding: 8px 16px !important;
+    transition: all 0.15s ease !important;
+}}
+.stDownloadButton button:hover {{
+    border-color: {ACCENT} !important;
+    color: {ACCENT} !important;
 }}
 
 /* ---- Badges ---- */
 .badge {{
     display: inline-block;
     padding: 3px 10px;
-    border-radius: 4px;
+    border-radius: 20px;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.04em;
 }}
 .badge-low    {{ background: #EBF0EA; color: {ACCENT}; }}
 .badge-medium {{ background: #FBF1E5; color: {WARNING}; }}
-.badge-high   {{ background: #FCE9E0; color: #B04020; }}
+.badge-high   {{ background: #FCE9E0; color: {DANGER}; }}
 .badge-ok     {{ background: #EBF0EA; color: {ACCENT}; }}
-.badge-fail   {{ background: #FCE9E0; color: #B04020; }}
+.badge-fail   {{ background: #FCE9E0; color: {DANGER}; }}
 
 /* ---- Tables ---- */
 table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
 th {{
     text-align: left;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     color: {TEXT_SEC};
-    padding: 8px 12px;
-    border-bottom: 1px solid {BORDER};
-    background: {BG};
+    padding: 10px 14px;
+    border-bottom: 2px solid {BORDER};
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }}
 td {{
-    padding: 9px 12px;
-    border-bottom: 1px solid {BORDER};
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(224,223,215,0.5);
     color: {TEXT_MAIN};
     vertical-align: top;
 }}
 tr:last-child td {{ border-bottom: none; }}
+tr:hover td {{ background-color: rgba(83,107,79,0.02); }}
 
 /* ---- Banners ---- */
 .warn-banner {{
     background: #FBF1E5;
     border: 1px solid {WARNING};
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 12px 16px;
     color: {WARNING};
     font-size: 13px;
+    font-weight: 500;
     margin-bottom: 14px;
 }}
 .info-banner {{
     background: #EBF0EA;
     border: 1px solid {ACCENT};
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 12px 16px;
     color: {ACCENT};
     font-size: 13px;
+    font-weight: 500;
     margin-bottom: 14px;
 }}
 
@@ -224,9 +262,30 @@ tr:last-child td {{ border-bottom: none; }}
     font-size: 11px;
     color: {TEXT_SEC};
     border-left: 3px solid {BORDER};
-    padding-left: 10px;
-    margin-top: 10px;
-    line-height: 1.6;
+    padding-left: 12px;
+    margin-top: 12px;
+    line-height: 1.7;
+}}
+
+/* ---- Metric widgets (Streamlit native) ---- */
+[data-testid="stMetricValue"] {{
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    color: {TEXT_MAIN} !important;
+}}
+[data-testid="stMetricLabel"] {{
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: {TEXT_SEC} !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}}
+
+/* ---- Separator ---- */
+hr {{
+    border: none;
+    border-top: 1px solid {BORDER};
+    margin: 24px 0 !important;
 }}
 
 /* ---- Hide Streamlit chrome ---- */
@@ -330,7 +389,7 @@ def show_backend_status():
     alive = backend_alive()
     if not alive:
         st.markdown(
-            '<div class="warn-banner">⚠ Backend API is not reachable at '
+            '<div class="warn-banner">Backend API is not reachable at '
             f'{API_BASE}.  Start it with: <code>uvicorn api:app --reload --port 8000</code>'
             "</div>",
             unsafe_allow_html=True,
@@ -339,518 +398,117 @@ def show_backend_status():
 
 
 # ===========================================================================
-# Page: Dashboard
+# Page: AI Text Decision Auditor
 # ===========================================================================
 
-def page_dashboard(alive: bool):
-    st.markdown("# Responsible AI Framework")
+def page_text_audit():
     st.markdown(
-        '<p style="color:#77796F;font-size:13px;margin-bottom:20px;">'
-        "Academic prototype — synthetic loan-application decisions with "
-        "explainability, fairness, privacy, security, and human-review layers."
-        "</p>",
+        f"""<div style="margin-bottom:24px;">
+            <h2 style="margin:0 0 4px 0;">AI Decision & Trust Evaluator</h2>
+            <p style="color:{TEXT_SEC};font-size:13px;margin:0;">
+                Paste any AI-generated decision text below. The system will classify the outcome,
+                check for fairness concerns, and determine if human review is needed.
+            </p>
+        </div>""",
         unsafe_allow_html=True,
     )
 
-    # Stats row
-    stats = api_get("/stats") if alive else {}
-    stats = stats or {}
-
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Total Decisions",     stats.get("total_decisions", "—"))
-    with col2:
-        st.metric("High-Risk Decisions", stats.get("high_risk", "—"))
-    with col3:
-        st.metric("Pending Review",      stats.get("pending_review", "—"))
-    with col4:
-        st.metric("Reviewed",            stats.get("reviewed", "—"))
-
-    st.markdown("---")
-    col_left, col_right = st.columns([1, 1])
-
-    # Model performance
-    with col_left:
-        section("MODEL PERFORMANCE")
-        metrics = api_get("/metrics") if alive else None
-        if metrics:
-            for k in ("accuracy", "precision", "recall", "f1_score"):
-                v = metrics.get(k)
-                if v is not None:
-                    st.markdown(
-                        f"<table><tr><td style='color:{TEXT_SEC};width:140px'>{k.replace('_',' ').title()}</td>"
-                        f"<td><b>{v:.4f}</b></td></tr></table>",
-                        unsafe_allow_html=True,
-                    )
-        else:
-            st.caption("Run train_model.py then start the API to see metrics.")
-
-    # Fairness summary
-    with col_right:
-        section("FAIRNESS SUMMARY")
-        fairness = api_get("/fairness") if alive else None
-        if fairness:
-            dpd = fairness.get("demographic_parity_difference")
-            fw  = fairness.get("fairness_warning", False)
-            if fw:
-                st.markdown(
-                    f'<div class="warn-banner">Fairness warning: DPD = {dpd:.4f}</div>',
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.markdown(
-                    f'<div class="info-banner">Fairness OK: DPD = {dpd:.4f}</div>',
-                    unsafe_allow_html=True,
-                )
-            gm = fairness.get("group_metrics", [])
-            if gm:
-                rows = "".join(
-                    f"<tr><td>{g['group']}</td><td>{g['size']}</td>"
-                    f"<td>{g['selection_rate']:.2%}</td></tr>"
-                    for g in gm
-                )
-                st.markdown(
-                    f"<table><thead><tr><th>Group</th><th>N</th>"
-                    f"<th>Selection Rate</th></tr></thead><tbody>{rows}</tbody></table>",
-                    unsafe_allow_html=True,
-                )
-        else:
-            st.caption("Fairness data not available.")
-
-    # Recent decisions
-    st.markdown("---")
-    section("RECENT ACTIVITY")
-    decisions = api_get("/decisions", {"limit": 8}) if alive else []
-    decisions = decisions or []
-    if decisions:
-        rows = ""
-        for d in decisions:
-            ts = d.get("created_at", "")[:19].replace("T", " ")
-            rl = d.get("risk_level", "—")
-            ro = d.get("routing_outcome", "—")
-            pred = "✓ Approved" if d.get("original_prediction") == 1 else "✗ Rejected"
-            rows += (
-                f"<tr><td style='font-family:monospace;font-size:11px'>{d['decision_id'][:8]}…</td>"
-                f"<td>{ts}</td><td>{pred}</td>"
-                f"<td>{risk_badge(rl)}</td><td>{ro}</td></tr>"
-            )
-        st.markdown(
-            f"<table><thead><tr><th>ID</th><th>Time (UTC)</th><th>Prediction</th>"
-            f"<th>Risk</th><th>Routing</th></tr></thead><tbody>{rows}</tbody></table>",
-            unsafe_allow_html=True,
-        )
-    else:
-        st.caption("No decisions recorded yet.  Use 'Make a Prediction' to create one.")
-
-
-# ===========================================================================
-# Page: Make a Prediction
-# ===========================================================================
-
-def page_predict(alive: bool):
-    st.markdown("# Make a Prediction")
-    st.markdown(
-        '<p style="color:#77796F;font-size:13px;">Enter synthetic applicant data. '
-        "The system runs the full Responsible AI assessment pipeline.</p>",
-        unsafe_allow_html=True,
+    user_text = st.text_area(
+        "Input Text",
+        height=140,
+        placeholder="Paste AI-generated decision text here...",
+        label_visibility="collapsed",
     )
 
-    with st.form("predict_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            income    = st.number_input("Annual Income ($)", 0.0, 1_000_000.0, 55000.0, step=1000.0)
-            cs        = st.number_input("Credit Score",      300,  850,         650)
-            debt      = st.number_input("Existing Debt ($)", 0.0, 500_000.0,   10000.0, step=500.0)
-        with col2:
-            emp_dur   = st.number_input("Employment Duration (years)", 0.0, 50.0, 5.0, step=0.5)
-            loan_amt  = st.number_input("Loan Amount ($)",  1000.0, 1_000_000.0, 25000.0, step=500.0)
+    col_btn, _ = st.columns([1, 3])
+    with col_btn:
+        analyze_clicked = st.button("Analyze Decision", type="primary", use_container_width=True)
 
-        submitted = st.form_submit_button("Run Assessment", use_container_width=True)
+    if analyze_clicked or (user_text and user_text.strip()):
+        if not user_text.strip():
+            st.warning("Please paste or type AI text to evaluate.")
+            return
 
-    if not submitted:
-        return
+        from text_analyzer import analyze_ai_text
+        result = analyze_ai_text(user_text)
 
-    if not alive:
-        st.error("Backend is not running.  Start uvicorn api:app --reload --port 8000")
-        return
+        st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
 
-    payload = {
-        "income":              income,
-        "credit_score":        float(cs),
-        "existing_debt":       debt,
-        "employment_duration": emp_dur,
-        "loan_amount":         loan_amt,
-    }
+        # --- 3 Result Cards ---
+        c1, c2, c3 = st.columns(3)
 
-    with st.spinner("Running Responsible AI assessment …"):
-        result = api_post("/predict", payload)
-
-    if result is None or "error" in result:
-        st.error(f"Prediction failed: {result}")
-        return
-
-    # --- Results ---
-    st.markdown("---")
-    col_pred, col_risk, col_route = st.columns(3)
-
-    with col_pred:
-        section("PREDICTION")
-        label = result.get("prediction_label", "—")
-        prob  = result.get("prediction_prob", 0.0)
-        color = ACCENT if result.get("prediction") == 1 else "#B04020"
-        st.markdown(
-            f"<div style='font-size:22px;font-weight:700;color:{color}'>{label}</div>"
-            f"<div style='font-size:13px;color:{TEXT_SEC};margin-top:4px'>"
-            f"Model probability: {fmt_prob(prob)}<br>"
-            f"<span style='font-size:11px'>Probability is not a calibrated confidence interval.</span>"
-            f"</div>",
-            unsafe_allow_html=True,
-        )
-
-    with col_risk:
-        section("RISK ASSESSMENT")
-        rl    = result.get("risk_level", "—")
-        score = result.get("risk_score", 0)
-        st.markdown(
-            f"{risk_badge(rl)}"
-            f"<div style='margin-top:8px;font-size:13px'>Score: <b>{score}</b></div>",
-            unsafe_allow_html=True,
-        )
-        flags = result.get("risk_flags", [])
-        if flags:
-            for f in flags:
-                st.markdown(f"<li style='font-size:12px;color:{WARNING}'>{f}</li>",
-                            unsafe_allow_html=True)
-
-    with col_route:
-        section("ROUTING")
-        routing = result.get("routing", "—")
-        st.markdown(
-            f"<div style='font-size:15px;font-weight:600'>{routing}</div>"
-            f"<div style='font-size:12px;color:{TEXT_SEC};margin-top:6px'>"
-            f"{result.get('routing_reason','')}</div>",
-            unsafe_allow_html=True,
-        )
-
-    # RA checks
-    st.markdown("---")
-    section("RESPONSIBLE AI CHECKS")
-    checks = {
-        "Privacy":     result.get("privacy_passed",     False),
-        "Security":    result.get("security_passed",    False),
-        "Reliability": result.get("reliability_passed", False),
-    }
-    row_html = "".join(
-        f"<tr><td>{k}</td><td>{check_badge(v)}</td></tr>"
-        for k, v in checks.items()
-    )
-    fw = result.get("fairness_warning", False)
-    fw_badge = (
-        '<span class="badge badge-medium">WARNING</span>'
-        if fw
-        else '<span class="badge badge-ok">OK</span>'
-    )
-    row_html += f"<tr><td>Fairness (batch)</td><td>{fw_badge}</td></tr>"
-    st.markdown(
-        f"<table style='max-width:340px'><thead><tr><th>Check</th><th>Status</th>"
-        f"</tr></thead><tbody>{row_html}</tbody></table>",
-        unsafe_allow_html=True,
-    )
-
-    # Explanation
-    expl = result.get("explanation_summary", "")
-    if expl:
-        st.markdown("---")
-        section("SHAP EXPLANATION")
-        st.markdown(f"<div style='font-size:13px'>{expl}</div>", unsafe_allow_html=True)
-        st.markdown(
-            '<div class="caveat">SHAP values show which features most influenced '
-            "this model output.  They do not prove the decision is correct or fair.</div>",
-            unsafe_allow_html=True,
-        )
-
-    # Decision ID
-    st.markdown(
-        f"<div style='font-size:11px;color:{TEXT_SEC};margin-top:14px'>"
-        f"Decision ID: <code>{result.get('decision_id','—')}</code></div>",
-        unsafe_allow_html=True,
-    )
-
-
-# ===========================================================================
-# Page: Fairness Analysis
-# ===========================================================================
-
-def page_fairness(alive: bool):
-    st.markdown("# Fairness Analysis")
-    st.markdown(
-        '<p style="color:#77796F;font-size:13px;">'
-        "Group-level fairness metrics computed on the held-out test set with "
-        "ground-truth labels.  Fairness is not inferred from individual predictions.</p>",
-        unsafe_allow_html=True,
-    )
-
-    fairness = api_get("/fairness") if alive else None
-    if not fairness:
-        st.warning("Fairness data not available.  Start the API and train the model first.")
-        return
-
-    # Threshold control
-    threshold = st.slider(
-        "Demographic-parity-difference warning threshold",
-        min_value=0.01, max_value=0.30, value=float(fairness.get("threshold_used", 0.10)),
-        step=0.01,
-        help="Adjust to see how different thresholds affect the warning status.",
-    )
-
-    dpd = fairness.get("demographic_parity_difference", 0.0)
-    eod = fairness.get("equalized_odds_difference")
-    fw  = abs(dpd) > threshold
-
-    col_left, col_right = st.columns([1, 1])
-
-    with col_left:
-        section("GLOBAL METRICS")
-        table_rows = [
-            ("Overall selection rate", f"{fairness.get('overall_selection_rate',0):.2%}"),
-            ("Demographic parity diff", f"{dpd:.4f}"),
-            ("Equalized odds diff",
-             f"{eod:.4f}" if eod is not None else "N/A"),
-            ("Sample size", str(fairness.get("n_samples", "—"))),
-            ("Warning threshold", f"{threshold:.2f}"),
-        ]
-        rows = "".join(
-            f"<tr><td style='color:{TEXT_SEC}'>{k}</td><td><b>{v}</b></td></tr>"
-            for k, v in table_rows
-        )
-        st.markdown(
-            f"<table><tbody>{rows}</tbody></table>",
-            unsafe_allow_html=True,
-        )
-
-        if fw:
+        with c1:
+            dec_color = ACCENT if "APPROV" in result.detected_decision else (DANGER if "REJECT" in result.detected_decision else WARNING)
+            dec_icon = "&#10003;" if "APPROV" in result.detected_decision else ("&#10007;" if "REJECT" in result.detected_decision else "&#8212;")
             st.markdown(
-                f'<div class="warn-banner" style="margin-top:12px">⚠ {fairness.get("warning_message","Fairness warning.")}</div>',
-                unsafe_allow_html=True,
-            )
-        else:
-            st.markdown(
-                f'<div class="info-banner" style="margin-top:12px">✓ Demographic-parity difference '
-                f"({dpd:.4f}) is within the threshold ({threshold:.2f}).</div>",
+                f"""<div class="panel" style="min-height:130px;border-top:3px solid {dec_color};">
+                    <div class="panel-title">AI Decision</div>
+                    <div style="font-size:24px;font-weight:700;color:{dec_color};margin:10px 0 6px 0;">{dec_icon} {result.detected_decision}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">Confidence: <b>{result.decision_confidence}</b></div>
+                </div>""",
                 unsafe_allow_html=True,
             )
 
-    with col_right:
-        section("GROUP-LEVEL SELECTION RATES")
-        gm = fairness.get("group_metrics", [])
-        if gm:
-            df_gm = pd.DataFrame(gm)
-            import matplotlib.pyplot as plt
-            fig, ax = plt.subplots(figsize=(5, 3))
-            fig.patch.set_facecolor(BG)
-            ax.set_facecolor(BG)
-            colors = [ACCENT if abs(g["selection_rate"] - fairness.get("overall_selection_rate", 0)) <= threshold else WARNING
-                      for g in gm]
-            ax.bar(df_gm["group"], df_gm["selection_rate"], color=colors, width=0.5)
-            ax.axhline(fairness.get("overall_selection_rate", 0), color=TEXT_SEC,
-                       linestyle="--", linewidth=0.8, label="Overall")
-            ax.set_ylabel("Selection Rate", fontsize=10, color=TEXT_MAIN)
-            ax.set_ylim(0, 1)
-            ax.tick_params(colors=TEXT_MAIN, labelsize=9)
-            ax.spines[["top", "right"]].set_visible(False)
-            ax.spines[["left", "bottom"]].set_color(BORDER)
-            ax.legend(fontsize=9, framealpha=0)
-            plt.tight_layout()
-            st.pyplot(fig, use_container_width=True)
-
-    # Group table
-    st.markdown("---")
-    section("GROUP DETAIL TABLE")
-    if gm:
-        table_rows = []
-        for g in gm:
-            acc_val = g.get("accuracy")
-            acc_str = f"{acc_val:.2%}" if acc_val is not None else "N/A"
-            table_rows.append(
-                f"<tr><td>{g['group']}</td><td>{g['size']}</td>"
-                f"<td>{g['selection_rate']:.2%}</td>"
-                f"<td>{acc_str}</td></tr>"
+        with c2:
+            is_fair = not ("WARNING" in result.fairness_status or "BIASED" in result.fairness_status)
+            fair_color = ACCENT if is_fair else WARNING
+            fair_icon = "&#9679;" if is_fair else "&#9888;"
+            fair_title = "No Bias Detected" if is_fair else "Bias Alert"
+            fair_desc = "No prohibited demographic attributes cited" if is_fair else "Contains sensitive demographic references"
+            st.markdown(
+                f"""<div class="panel" style="min-height:130px;border-top:3px solid {fair_color};">
+                    <div class="panel-title">Fairness</div>
+                    <div style="font-size:24px;font-weight:700;color:{fair_color};margin:10px 0 6px 0;">{fair_icon} {fair_title}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">{fair_desc}</div>
+                </div>""",
+                unsafe_allow_html=True,
             )
-        rows_str = "".join(table_rows)
+
+        with c3:
+            rev_color = WARNING if result.requires_human_review else ACCENT
+            rev_icon = "&#9998;" if result.requires_human_review else "&#10003;"
+            rev_title = f"Required" if result.requires_human_review else "Not Required"
+            rev_desc = f"Urgency: {result.review_urgency}" if result.requires_human_review else "Safe to proceed automatically"
+            st.markdown(
+                f"""<div class="panel" style="min-height:130px;border-top:3px solid {rev_color};">
+                    <div class="panel-title">Human Review</div>
+                    <div style="font-size:24px;font-weight:700;color:{rev_color};margin:10px 0 6px 0;">{rev_icon} {rev_title}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">{rev_desc}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
+
+        # --- Rationale Panel ---
         st.markdown(
-            "<table><thead><tr><th>Group</th><th>N</th>"
-            "<th>Selection Rate</th><th>Accuracy</th></tr></thead>"
-            f"<tbody>{rows_str}</tbody></table>",
+            f"""<div class="panel">
+                <div class="panel-title">Evaluation Summary</div>
+                <div style="font-size:13px;line-height:1.7;color:{TEXT_MAIN};">{result.summary}</div>
+            </div>""",
             unsafe_allow_html=True,
         )
 
-    # Metric definitions
-    st.markdown("---")
-    section("METRIC DEFINITIONS")
-    for name, defn in fairness.get("metric_definitions", {}).items():
+        if result.fairness_flags:
+            st.markdown(
+                f"""<div class="warn-banner">
+                    <b>Flagged References:</b> {', '.join(result.fairness_flags)}
+                </div>""",
+                unsafe_allow_html=True,
+            )
+
+        # --- Future Scope ---
         st.markdown(
-            f"<div style='font-size:13px'><b>{name}</b>: {defn}</div><br>",
+            f"""<div class="panel" style="border-left:3px solid {ACCENT};">
+                <div class="panel-title">Future Scope</div>
+                <div style="font-size:12px;line-height:1.7;color:{TEXT_SEC};">
+                    In the next phase, this text evaluator will be integrated as an automated
+                    <b>LLM-as-a-Judge</b> proxy service in the cloud pipeline.
+                    All customer-facing AI recommendations will be intercepted in real-time
+                    to prevent bias and ensure regulatory compliance.
+                </div>
+            </div>""",
             unsafe_allow_html=True,
-        )
-
-    st.markdown(
-        f'<div class="caveat">{fairness.get("caveat","")}</div>',
-        unsafe_allow_html=True,
-    )
-
-
-# ===========================================================================
-# Page: Human Review
-# ===========================================================================
-
-def page_review(alive: bool):
-    st.markdown("# Human Review")
-    st.markdown(
-        '<p style="color:#77796F;font-size:13px;">Decisions with high risk scores '
-        "are routed here.  Reviewer actions are recorded separately from the "
-        "original model prediction.</p>",
-        unsafe_allow_html=True,
-    )
-
-    pending = api_get("/review/pending") if alive else []
-    pending = pending or []
-
-    if not pending:
-        st.markdown(
-            '<div class="info-banner">No decisions are currently awaiting review.</div>',
-            unsafe_allow_html=True,
-        )
-        return
-
-    st.markdown(f"**{len(pending)} decision(s) pending review**")
-
-    for dec in pending:
-        did    = dec.get("decision_id", "")
-        ts     = dec.get("created_at", "")[:19].replace("T", " ")
-        rl     = dec.get("risk_level", "—")
-        score  = dec.get("risk_score", 0)
-        pred   = "Approved" if dec.get("original_prediction") == 1 else "Rejected"
-        prob   = dec.get("prediction_prob")
-        flags  = json.loads(dec.get("risk_reasons", "[]") or "[]")
-        expl   = dec.get("explanation_summary", "No explanation available.")
-
-        with st.expander(f"Decision {did[:12]}… — {ts} UTC — {rl} risk"):
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                st.markdown(
-                    f"<table>"
-                    f"<tr><td style='color:{TEXT_SEC}'>Prediction</td><td><b>{pred}</b></td></tr>"
-                    f"<tr><td style='color:{TEXT_SEC}'>Prob.</td><td><b>{fmt_prob(prob) if prob else '—'}</b></td></tr>"
-                    f"<tr><td style='color:{TEXT_SEC}'>Risk Level</td><td>{risk_badge(rl)}</td></tr>"
-                    f"<tr><td style='color:{TEXT_SEC}'>Risk Score</td><td><b>{score}</b></td></tr>"
-                    f"</table>",
-                    unsafe_allow_html=True,
-                )
-            with col2:
-                if flags:
-                    st.markdown("**Active risk flags:**")
-                    for f in flags:
-                        st.markdown(f"<li style='color:{WARNING};font-size:12px'>{f}</li>",
-                                    unsafe_allow_html=True)
-
-            st.markdown(f"**Explanation:** {expl}")
-
-            with st.form(f"review_form_{did}"):
-                reviewer_id = st.text_input("Reviewer ID", value="reviewer-1", key=f"rid_{did}")
-                action      = st.selectbox(
-                    "Action", ["APPROVE", "REJECT", "REQUEST_REVIEW"], key=f"act_{did}"
-                )
-                comments    = st.text_area("Comments (optional)", key=f"cmt_{did}")
-                submit_rev  = st.form_submit_button("Submit Review")
-
-            if submit_rev:
-                r = api_post(f"/review/{did}", {
-                    "reviewer_id": reviewer_id,
-                    "action":      action,
-                    "comments":    comments,
-                })
-                if r and "error" not in r:
-                    st.success(f"Review recorded: {action}")
-                    api_get.clear()
-                else:
-                    st.error(f"Failed to record review: {r}")
-
-
-# ===========================================================================
-# Page: Audit Logs
-# ===========================================================================
-
-def page_audit(alive: bool):
-    st.markdown("# Audit Log")
-    st.markdown(
-        '<p style="color:#77796F;font-size:13px;">Complete record of all decisions, '
-        "assessments, and reviewer actions.</p>",
-        unsafe_allow_html=True,
-    )
-
-    col_f1, col_f2, col_f3, col_f4 = st.columns(4)
-    with col_f1:
-        f_risk = st.selectbox("Risk level", ["All", "LOW", "MEDIUM", "HIGH"])
-    with col_f2:
-        f_routing = st.selectbox(
-            "Routing", ["All", "AUTO_APPROVED", "AUTO_REJECTED", "FLAGGED", "HUMAN_REVIEW"]
-        )
-    with col_f3:
-        f_review = st.selectbox("Review status", ["All", "PENDING", "REVIEWED", "NA"])
-    with col_f4:
-        f_limit = st.number_input("Rows", min_value=10, max_value=500, value=50)
-
-    params = {"limit": f_limit}
-    if f_risk    != "All": params["risk_level"]    = f_risk
-    if f_routing != "All": params["routing"]       = f_routing
-    if f_review  != "All": params["review_status"] = f_review
-
-    decisions = api_get("/decisions", params) if alive else []
-    decisions = decisions or []
-
-    if not decisions:
-        st.caption("No decisions match the selected filters.")
-        return
-
-    rows = ""
-    for d in decisions:
-        ts    = d.get("created_at", "")[:19].replace("T", " ")
-        rl    = d.get("risk_level", "—")
-        pred  = "Approved" if d.get("original_prediction") == 1 else "Rejected"
-        final = d.get("final_decision")
-        final_str = ("Approved" if final == 1 else "Rejected") if final is not None else "—"
-        rv    = d.get("reviewer_action", "—") or "—"
-        rs    = d.get("review_status", "—")
-        rows += (
-            f"<tr>"
-            f"<td style='font-family:monospace;font-size:11px'>{d['decision_id'][:12]}…</td>"
-            f"<td>{ts}</td>"
-            f"<td>{pred}</td>"
-            f"<td>{risk_badge(rl)}</td>"
-            f"<td>{d.get('routing_outcome','—')}</td>"
-            f"<td>{rs}</td>"
-            f"<td>{rv}</td>"
-            f"<td>{final_str}</td>"
-            f"</tr>"
-        )
-
-    st.markdown(
-        "<div style='overflow-x:auto'>"
-        "<table><thead><tr>"
-        "<th>Decision ID</th><th>Time (UTC)</th><th>Prediction</th>"
-        "<th>Risk</th><th>Routing</th><th>Review Status</th>"
-        "<th>Reviewer Action</th><th>Final Decision</th>"
-        f"</tr></thead><tbody>{rows}</tbody></table></div>",
-        unsafe_allow_html=True,
-    )
-
-    # Export
-    if st.button("Export to CSV"):
-        df = pd.DataFrame(decisions)
-        csv = df.to_csv(index=False)
-        st.download_button(
-            "Download CSV", csv,
-            file_name="audit_log.csv", mime="text/csv",
         )
 
 
@@ -859,13 +517,18 @@ def page_audit(alive: bool):
 # ===========================================================================
 
 def page_evaluation(alive: bool):
+    import matplotlib
+    matplotlib.rcParams['font.family'] = 'sans-serif'
     import matplotlib.pyplot as plt
 
-    st.markdown("# Model Evaluation")
     st.markdown(
-        '<p style="color:#77796F;font-size:13px;">'
-        "Baseline vs. Responsible AI Framework comparison on the held-out test set. "
-        "All numbers are measured, not illustrative.</p>",
+        f"""<div style="margin-bottom:24px;">
+            <h2 style="margin:0 0 4px 0;">Model Evaluation</h2>
+            <p style="color:{TEXT_SEC};font-size:13px;margin:0;">
+                Baseline vs. Responsible AI Framework comparison on the held-out test set.
+                All numbers are measured, not illustrative.
+            </p>
+        </div>""",
         unsafe_allow_html=True,
     )
 
@@ -882,19 +545,26 @@ def page_evaluation(alive: bool):
     df = pd.read_csv(eval_path)
     metrics = api_get("/metrics") if alive else None
 
-    col_left, col_right = st.columns([1, 1])
+    col_left, col_right = st.columns([1, 1], gap="medium")
 
     with col_left:
-        section("COMPARISON TABLE")
+        st.markdown(
+            f"""<div class="panel">
+                <div class="panel-title">Comparison Table</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
         rows = ""
         for _, row in df.iterrows():
             m  = row.get("metric", "")
             b  = row.get("baseline")
             fw = row.get("framework")
+            b_str = f"{b}" if pd.notna(b) else "-"
+            fw_str = f"{fw}" if pd.notna(fw) else "-"
             rows += (
                 f"<tr><td>{m}</td>"
-                f"<td>{b if pd.notna(b) else '—'}</td>"
-                f"<td>{fw if pd.notna(fw) else '—'}</td></tr>"
+                f"<td style='font-weight:500'>{b_str}</td>"
+                f"<td style='font-weight:500'>{fw_str}</td></tr>"
             )
         st.markdown(
             "<table><thead><tr><th>Metric</th><th>Baseline</th><th>Framework</th>"
@@ -907,7 +577,12 @@ def page_evaluation(alive: bool):
                                file_name="evaluation_results.csv", mime="text/csv")
 
     with col_right:
-        section("ACCURACY COMPARISON")
+        st.markdown(
+            f"""<div class="panel">
+                <div class="panel-title">Performance Chart</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
         row_acc  = df[df["metric"] == "accuracy"]
         row_f1   = df[df["metric"] == "f1_score"]
         if not row_acc.empty and not row_f1.empty:
@@ -917,39 +592,56 @@ def page_evaluation(alive: bool):
             frame = [float(row_acc["framework"].values[0]),
                      float(row_f1["framework"].values[0])]
             x = range(len(cats))
-            fig, ax = plt.subplots(figsize=(5, 3))
+            fig, ax = plt.subplots(figsize=(5, 3.2))
             fig.patch.set_facecolor(BG)
             ax.set_facecolor(BG)
-            ax.bar([i - 0.18 for i in x], base,  0.3, label="Baseline",   color=BORDER)
-            ax.bar([i + 0.18 for i in x], frame, 0.3, label="Framework",  color=ACCENT)
+            bar1 = ax.bar([i - 0.17 for i in x], base,  0.28, label="Baseline",  color=BORDER, edgecolor="none")
+            bar2 = ax.bar([i + 0.17 for i in x], frame, 0.28, label="Framework", color=ACCENT, edgecolor="none")
+            # Value labels on bars
+            for bar in bar1:
+                h = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width()/2., h + 0.02,
+                        f'{h:.3f}', ha='center', va='bottom', fontsize=9, color=TEXT_SEC)
+            for bar in bar2:
+                h = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width()/2., h + 0.02,
+                        f'{h:.3f}', ha='center', va='bottom', fontsize=9, color=ACCENT)
             ax.set_xticks(list(x))
-            ax.set_xticklabels(cats, fontsize=10)
-            ax.set_ylim(0, 1)
-            ax.set_ylabel("Score", fontsize=10)
+            ax.set_xticklabels(cats, fontsize=11, fontweight=500)
+            ax.set_ylim(0, 1.12)
+            ax.set_ylabel("Score", fontsize=10, color=TEXT_SEC)
             ax.spines[["top", "right"]].set_visible(False)
             ax.spines[["left", "bottom"]].set_color(BORDER)
-            ax.legend(fontsize=9, framealpha=0)
+            ax.tick_params(colors=TEXT_SEC, labelsize=9)
+            ax.legend(fontsize=9, framealpha=0, loc="upper right")
             plt.tight_layout()
             st.pyplot(fig, use_container_width=True)
 
-    # Confusion matrix from metrics endpoint
+    # Confusion matrix
     if metrics and "confusion_matrix" in metrics:
         st.markdown("---")
-        section("CONFUSION MATRIX (test set)")
         cm = metrics["confusion_matrix"]
-        fig, ax = plt.subplots(figsize=(3.5, 2.8))
-        fig.patch.set_facecolor(BG)
-        ax.set_facecolor(BG)
-        im = ax.imshow(cm, cmap="Greens")
-        ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
-        ax.set_xticklabels(["Pred: Rej", "Pred: App"], fontsize=9)
-        ax.set_yticklabels(["Act: Rej", "Act: App"], fontsize=9)
-        for i in range(2):
-            for j in range(2):
-                ax.text(j, i, cm[i][j], ha="center", va="center",
-                        fontsize=12, color=TEXT_MAIN)
-        plt.tight_layout()
-        st.pyplot(fig, use_container_width=True)
+        col_cm, _ = st.columns([1, 2])
+        with col_cm:
+            st.markdown(
+                f"""<div class="panel">
+                    <div class="panel-title">Confusion Matrix (Test Set)</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+            fig, ax = plt.subplots(figsize=(3.5, 3))
+            fig.patch.set_facecolor(BG)
+            ax.set_facecolor(BG)
+            im = ax.imshow(cm, cmap="Greens", aspect="auto")
+            ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
+            ax.set_xticklabels(["Pred: Reject", "Pred: Approve"], fontsize=9)
+            ax.set_yticklabels(["Actual: Reject", "Actual: Approve"], fontsize=9)
+            for i in range(2):
+                for j in range(2):
+                    ax.text(j, i, cm[i][j], ha="center", va="center",
+                            fontsize=14, fontweight=600, color=TEXT_MAIN)
+            plt.tight_layout()
+            st.pyplot(fig, use_container_width=True)
 
     st.markdown(
         '<div class="caveat">'
@@ -962,152 +654,32 @@ def page_evaluation(alive: bool):
 
 
 # ===========================================================================
-# Page: AI Text Decision Auditor
-# ===========================================================================
-
-def page_text_audit():
-    st.markdown("## AI Decision & Trust Evaluator")
-    st.markdown(
-        f"<p style='color:{TEXT_SEC};font-size:13px;margin-bottom:20px;'>"
-        "Audit AI-generated decision text for automated classification, fairness compliance, and human review routing."
-        "</p>",
-        unsafe_allow_html=True,
-    )
-
-    user_text = st.text_area(
-        "AI-Generated Decision / Explanation Text",
-        height=130,
-        placeholder="Paste AI-generated decision text here...",
-    )
-
-    col1, _ = st.columns([1.5, 4])
-    with col1:
-        analyze_clicked = st.button("Analyze Decision", type="primary", use_container_width=True)
-
-    if analyze_clicked or (user_text and user_text.strip()):
-        if not user_text.strip():
-            st.warning("Please paste or type AI text to evaluate.")
-            return
-
-        from text_analyzer import analyze_ai_text
-        result = analyze_ai_text(user_text)
-
-        st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
-
-        # 3 Clean Result Cards
-        c1, c2, c3 = st.columns(3)
-
-        with c1:
-            dec_color = ACCENT if "APPROV" in result.detected_decision else ("#B04020" if "REJECT" in result.detected_decision else WARNING)
-            st.markdown(
-                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
-                    <div class="panel-title">1. AI Decision Outcome</div>
-                    <div style="font-size:22px;font-weight:700;color:{dec_color};line-height:1.2;margin:6px 0;">{result.detected_decision}</div>
-                    <div style="font-size:12px;color:{TEXT_SEC};">Confidence: <b>{result.decision_confidence}</b></div>
-                </div>""",
-                unsafe_allow_html=True,
-            )
-
-        with c2:
-            is_fair = not ("WARNING" in result.fairness_status or "BIASED" in result.fairness_status)
-            fair_color = ACCENT if is_fair else WARNING
-            fair_title = "Fair & Unbiased" if is_fair else "Demographic Alert"
-            fair_desc = "No prohibited attributes cited" if is_fair else "Contains sensitive demographic terms"
-            st.markdown(
-                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
-                    <div class="panel-title">2. Fairness Status</div>
-                    <div style="font-size:22px;font-weight:700;color:{fair_color};line-height:1.2;margin:6px 0;">{fair_title}</div>
-                    <div style="font-size:12px;color:{TEXT_SEC};">{fair_desc}</div>
-                </div>""",
-                unsafe_allow_html=True,
-            )
-
-        with c3:
-            rev_color = WARNING if result.requires_human_review else ACCENT
-            rev_title = f"Required ({result.review_urgency})" if result.requires_human_review else "Not Required"
-            rev_desc = "Escalate to human underwriter" if result.requires_human_review else "Safe to proceed automatically"
-            st.markdown(
-                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
-                    <div class="panel-title">3. Human Review</div>
-                    <div style="font-size:22px;font-weight:700;color:{rev_color};line-height:1.2;margin:6px 0;">{rev_title}</div>
-                    <div style="font-size:12px;color:{TEXT_SEC};">{rev_desc}</div>
-                </div>""",
-                unsafe_allow_html=True,
-            )
-
-        st.markdown("<div style='margin-top:16px;'></div>", unsafe_allow_html=True)
-
-        # Rationale Panel
-        st.markdown(
-            f"""<div class="panel">
-                <div class="panel-title">Evaluation Summary & Rationale</div>
-                <div style="font-size:13px;line-height:1.6;color:{TEXT_MAIN};">{result.summary}</div>
-            </div>""",
-            unsafe_allow_html=True,
-        )
-
-        if result.fairness_flags:
-            st.markdown(
-                f"""<div class="warn-banner">
-                    <b>Flagged Demographic References:</b> {', '.join(result.fairness_flags)}
-                </div>""",
-                unsafe_allow_html=True,
-            )
-
-        # Future Scope Panel
-        st.markdown(
-            f"""<div class="panel" style="border-left:3px solid {ACCENT};">
-                <div class="panel-title">Future Scope & Cloud Pipeline</div>
-                <div style="font-size:13px;line-height:1.6;color:{TEXT_SEC};">
-                    In the next phase, this text evaluator will be integrated as an automated <b>LLM-as-a-Judge</b> proxy service in the cloud.
-                    All customer-facing explanations and automated AI recommendations will be intercepted in real-time to prevent bias and ensure full regulatory compliance.
-                </div>
-            </div>""",
-            unsafe_allow_html=True,
-        )
-
-
-# ===========================================================================
 # Navigation
 # ===========================================================================
 
 def main():
     alive = show_backend_status()
 
-    # Web App Top Navbar
+    # Clean header
     st.markdown(
-        f"""
-        <div style="display:flex; justify-content:space-between; align-items:center; padding: 6px 0 16px 0; border-bottom: 1px solid {BORDER}; margin-bottom: 20px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div style="background:{ACCENT}; color:#FFFFFF; width:34px; height:34px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;">R</div>
-                <div>
-                    <div style="font-size:16px; font-weight:700; color:{TEXT_MAIN}; line-height:1.2;">Responsible AI Platform</div>
-                    <div style="font-size:11px; color:{TEXT_SEC};">Trustworthy Decision-Making Engine</div>
-                </div>
+        f"""<div style="text-align:center; padding:8px 0 20px 0; margin-bottom:8px;">
+            <div style="font-size:20px; font-weight:700; color:{TEXT_MAIN}; letter-spacing:-0.3px;">
+                Responsible AI Platform
             </div>
-            <div>
-                <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:{ACCENT}; font-weight:600; background:#EBF0EA; padding:5px 12px; border-radius:20px;">
-                    <span style="width:7px; height:7px; border-radius:50%; background:{ACCENT};"></span> System Online
-                </span>
+            <div style="font-size:12px; color:{TEXT_SEC}; margin-top:2px;">
+                Trustworthy Decision-Making in Cloud Computing
             </div>
-        </div>
-        """,
+        </div>""",
         unsafe_allow_html=True,
     )
 
-    tab_audit, tab_dash, tab_predict, tab_eval = st.tabs([
+    tab_audit, tab_eval = st.tabs([
         "  AI Text Audit  ",
-        "  Dashboard  ",
-        "  Make a Prediction  ",
         "  Model Evaluation  ",
     ])
 
     with tab_audit:
         page_text_audit()
-    with tab_dash:
-        page_dashboard(alive)
-    with tab_predict:
-        page_predict(alive)
     with tab_eval:
         page_evaluation(alive)
 
