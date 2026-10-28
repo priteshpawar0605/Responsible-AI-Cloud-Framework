@@ -489,10 +489,12 @@ def page_predict(alive: bool):
         for k, v in checks.items()
     )
     fw = result.get("fairness_warning", False)
-    row_html += (
-        f"<tr><td>Fairness (batch)</td>"
-        f"<td>{'<span class=\"badge badge-medium\">WARNING</span>' if fw else '<span class=\"badge badge-ok\">OK</span>'}</td></tr>"
+    fw_badge = (
+        '<span class="badge badge-medium">WARNING</span>'
+        if fw
+        else '<span class="badge badge-ok">OK</span>'
     )
+    row_html += f"<tr><td>Fairness (batch)</td><td>{fw_badge}</td></tr>"
     st.markdown(
         f"<table style='max-width:340px'><thead><tr><th>Check</th><th>Status</th>"
         f"</tr></thead><tbody>{row_html}</tbody></table>",
@@ -609,16 +611,20 @@ def page_fairness(alive: bool):
     st.markdown("---")
     section("GROUP DETAIL TABLE")
     if gm:
-        rows = "".join(
-            f"<tr><td>{g['group']}</td><td>{g['size']}</td>"
-            f"<td>{g['selection_rate']:.2%}</td>"
-            f"<td>{'N/A' if g.get('accuracy') is None else f\"{g['accuracy']:.2%}\"}</td></tr>"
-            for g in gm
-        )
+        table_rows = []
+        for g in gm:
+            acc_val = g.get("accuracy")
+            acc_str = f"{acc_val:.2%}" if acc_val is not None else "N/A"
+            table_rows.append(
+                f"<tr><td>{g['group']}</td><td>{g['size']}</td>"
+                f"<td>{g['selection_rate']:.2%}</td>"
+                f"<td>{acc_str}</td></tr>"
+            )
+        rows_str = "".join(table_rows)
         st.markdown(
             "<table><thead><tr><th>Group</th><th>N</th>"
             "<th>Selection Rate</th><th>Accuracy</th></tr></thead>"
-            f"<tbody>{rows}</tbody></table>",
+            f"<tbody>{rows_str}</tbody></table>",
             unsafe_allow_html=True,
         )
 
