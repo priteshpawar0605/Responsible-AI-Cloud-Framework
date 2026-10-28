@@ -1,0 +1,52 @@
+# Responsible AI Framework — .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment secrets — never commit the real .env
+.env
+
+# Generated database (may contain synthetic decision records)
+audit.db
+*.db
+
+# Generated model artifacts
+models/loan_model.pkl
+models/metrics.json
+
+# Generated data
+data/loan_applications.csv
+data/test_set.csv
+data/evaluation_results.csv
+data/evaluation_detail.json
+
+# IDE / OS
+.idea/
+.vscode/
+*.DS_Store
+Thumbs.db
+
+# Streamlit cache
+.streamlit/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Jupyter
+.ipynb_checkpoints/
