@@ -28,9 +28,9 @@ import streamlit as st
 # Page config (must be first Streamlit call)
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Responsible AI Framework",
+    page_title="Responsible AI Platform",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # ---------------------------------------------------------------------------
@@ -50,32 +50,73 @@ CUSTOM_CSS = f"""
 html, body, [data-testid="stAppViewContainer"] {{
     background-color: {BG};
     color: {TEXT_MAIN};
-    font-family: "Inter", "Segoe UI", sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 14px;
 }}
 
-/* ---- Sidebar ---- */
+/* ---- Hide Default Streamlit Sidebar & Collapse Control for Web App Feel ---- */
 [data-testid="stSidebar"] {{
-    background-color: {SURFACE};
-    border-right: 1px solid {BORDER};
+    display: none !important;
 }}
-[data-testid="stSidebar"] .stRadio label {{
-    font-size: 13px;
+[data-testid="collapsedControl"] {{
+    display: none !important;
+}}
+section[data-testid="stSidebar"] {{
+    display: none !important;
+}}
+
+/* ---- Center and constrain max-width for web application layout ---- */
+.main .block-container {{
+    max-width: 1080px !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 3.5rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    margin: 0 auto !important;
+}}
+
+/* ---- Web App Navbar Tabs ---- */
+.stTabs [data-baseweb="tab-list"] {{
+    gap: 8px;
+    background-color: transparent;
+    border-bottom: 1px solid {BORDER};
+    padding-bottom: 0px;
+    margin-bottom: 24px;
+}}
+.stTabs [data-baseweb="tab"] {{
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 6px 6px 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: {TEXT_SEC};
+    background-color: transparent;
+    border: none;
+    transition: all 0.15s ease-in-out;
+}}
+.stTabs [data-baseweb="tab"]:hover {{
     color: {TEXT_MAIN};
+    background-color: rgba(0,0,0,0.02);
+}}
+.stTabs [aria-selected="true"] {{
+    color: {TEXT_MAIN} !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid {ACCENT} !important;
 }}
 
-/* ---- Main header ---- */
-h1 {{ font-size: 20px; font-weight: 600; color: {TEXT_MAIN}; margin-bottom: 2px; }}
-h2 {{ font-size: 16px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 18px; }}
-h3 {{ font-size: 14px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 12px; }}
+/* ---- Main headers ---- */
+h1 {{ font-size: 22px; font-weight: 700; color: {TEXT_MAIN}; margin-bottom: 4px; }}
+h2 {{ font-size: 18px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 14px; margin-bottom: 6px; }}
+h3 {{ font-size: 15px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 10px; margin-bottom: 4px; }}
 
-/* ---- Panels ---- */
+/* ---- Web App Surface Cards ---- */
 .panel {{
     background: {SURFACE};
     border: 1px solid {BORDER};
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 16px 20px;
     margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }}
 .panel-title {{
     font-size: 11px;
@@ -83,35 +124,52 @@ h3 {{ font-size: 14px; font-weight: 600; color: {TEXT_MAIN}; margin-top: 12px; }
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: {TEXT_SEC};
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }}
 
-/* ---- Stat row ---- */
-.stat-row {{ display: flex; gap: 12px; margin-bottom: 14px; }}
-.stat-cell {{
-    flex: 1;
-    background: {SURFACE};
-    border: 1px solid {BORDER};
-    border-radius: 4px;
-    padding: 12px 16px;
+/* ---- Modern Text Area ---- */
+.stTextArea textarea {{
+    background-color: #FFFFFF !important;
+    border: 1px solid {BORDER} !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    color: {TEXT_MAIN} !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
 }}
-.stat-num {{
-    font-size: 24px;
-    font-weight: 700;
-    color: {TEXT_MAIN};
-    line-height: 1;
+.stTextArea textarea:focus {{
+    border-color: {ACCENT} !important;
+    box-shadow: 0 0 0 2px rgba(83, 107, 79, 0.15) !important;
 }}
-.stat-label {{
-    font-size: 11px;
-    color: {TEXT_SEC};
-    margin-top: 4px;
+
+/* ---- Primary Button ---- */
+.stButton button[kind="primary"] {{
+    background-color: {ACCENT} !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 8px 24px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06) !important;
+}}
+.stButton button[kind="primary"]:hover {{
+    background-color: #42553F !important;
+}}
+
+/* ---- Secondary Button ---- */
+.stButton button {{
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    border: 1px solid {BORDER} !important;
+    background-color: #FFFFFF !important;
+    color: {TEXT_MAIN} !important;
 }}
 
 /* ---- Badges ---- */
 .badge {{
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 3px;
+    padding: 3px 10px;
+    border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -129,38 +187,36 @@ th {{
     font-size: 11px;
     font-weight: 600;
     color: {TEXT_SEC};
-    padding: 6px 10px;
+    padding: 8px 12px;
     border-bottom: 1px solid {BORDER};
     background: {BG};
 }}
 td {{
-    padding: 7px 10px;
+    padding: 9px 12px;
     border-bottom: 1px solid {BORDER};
     color: {TEXT_MAIN};
     vertical-align: top;
 }}
 tr:last-child td {{ border-bottom: none; }}
 
-/* ---- Warning banner ---- */
+/* ---- Banners ---- */
 .warn-banner {{
     background: #FBF1E5;
     border: 1px solid {WARNING};
-    border-radius: 4px;
-    padding: 10px 14px;
+    border-radius: 6px;
+    padding: 12px 16px;
     color: {WARNING};
     font-size: 13px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }}
-
-/* ---- Info banner ---- */
 .info-banner {{
     background: #EBF0EA;
     border: 1px solid {ACCENT};
-    border-radius: 4px;
-    padding: 10px 14px;
+    border-radius: 6px;
+    padding: 12px 16px;
     color: {ACCENT};
     font-size: 13px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }}
 
 /* ---- Caveat text ---- */
@@ -920,8 +976,8 @@ def page_text_audit():
 
     user_text = st.text_area(
         "AI-Generated Decision / Explanation Text",
-        height=140,
-        placeholder="Paste AI text here... e.g. 'The loan application is approved. Applicant income is $82,000 with credit score 740, and existing debt-to-income ratio is below 20%. Repayment capacity is strong.'"
+        height=130,
+        placeholder="Paste AI-generated decision text here...",
     )
 
     col1, _ = st.columns([1.5, 4])
@@ -1018,31 +1074,41 @@ def page_text_audit():
 def main():
     alive = show_backend_status()
 
-    with st.sidebar:
-        st.markdown(
-            f"<div style='font-size:14px;font-weight:700;color:{TEXT_MAIN};"
-            "padding:10px 0 6px 0;border-bottom:1px solid #E0DFD7;"
-            "margin-bottom:16px'>Responsible AI Framework</div>",
-            unsafe_allow_html=True,
-        )
-        page = st.radio(
-            "Navigation",
-            [
-                "AI Text Audit",
-                "Dashboard",
-                "Make a Prediction",
-                "Model Evaluation",
-            ],
-            label_visibility="collapsed",
-        )
+    # Web App Top Navbar
+    st.markdown(
+        f"""
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 6px 0 16px 0; border-bottom: 1px solid {BORDER}; margin-bottom: 20px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="background:{ACCENT}; color:#FFFFFF; width:34px; height:34px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;">R</div>
+                <div>
+                    <div style="font-size:16px; font-weight:700; color:{TEXT_MAIN}; line-height:1.2;">Responsible AI Platform</div>
+                    <div style="font-size:11px; color:{TEXT_SEC};">Trustworthy Decision-Making Engine</div>
+                </div>
+            </div>
+            <div>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:{ACCENT}; font-weight:600; background:#EBF0EA; padding:5px 12px; border-radius:20px;">
+                    <span style="width:7px; height:7px; border-radius:50%; background:{ACCENT};"></span> System Online
+                </span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    if page == "AI Text Audit":
+    tab_audit, tab_dash, tab_predict, tab_eval = st.tabs([
+        "  AI Text Audit  ",
+        "  Dashboard  ",
+        "  Make a Prediction  ",
+        "  Model Evaluation  ",
+    ])
+
+    with tab_audit:
         page_text_audit()
-    elif page == "Dashboard":
+    with tab_dash:
         page_dashboard(alive)
-    elif page == "Make a Prediction":
+    with tab_predict:
         page_predict(alive)
-    elif page == "Model Evaluation":
+    with tab_eval:
         page_evaluation(alive)
 
 
