@@ -906,87 +906,108 @@ def page_evaluation(alive: bool):
 
 
 # ===========================================================================
-# Page: AI Text Decision Auditor (Simple & Basic)
+# Page: AI Text Decision Auditor
 # ===========================================================================
 
 def page_text_audit():
-    st.markdown("## AI Text Decision Auditor")
-    st.caption("Paste any AI-generated decision text to evaluate what decision was made, if it is fair, and if human review is needed.")
-
-    # Simple sample buttons
-    c1, c2, c3, _ = st.columns([1.2, 1.4, 1.2, 2])
-    if "audit_input" not in st.session_state:
-        st.session_state.audit_input = ""
-
-    with c1:
-        if st.button("Sample 1: Fair Approval"):
-            st.session_state.audit_input = (
-                "After reviewing the applicant's profile, the loan application is approved. "
-                "Applicant maintains an annual income of $82,000, credit score of 740, "
-                "and debt-to-income ratio below 20%. Repayment capacity is strong."
-            )
-    with c2:
-        if st.button("Sample 2: Biased Rejection"):
-            st.session_state.audit_input = (
-                "The loan application has been rejected. Although the applicant's credit score is 680, "
-                "the applicant is a single female living in a high-risk inner-city neighborhood, "
-                "and our demographic risk profile indicates potential loan volatility for this group."
-            )
-    with c3:
-        if st.button("Sample 3: Uncertain"):
-            st.session_state.audit_input = (
-                "The model generated a borderline outcome. The applicant might be eligible for a loan, "
-                "but conflicting financial records make this determination unclear. Decision is inconclusive."
-            )
-
-    user_text = st.text_area(
-        "Paste AI-Generated Text Here",
-        value=st.session_state.audit_input,
-        height=110,
-        placeholder="e.g. 'The application is rejected due to credit score 580 and high existing debt...'"
+    st.markdown("## AI Decision & Trust Evaluator")
+    st.markdown(
+        f"<p style='color:{TEXT_SEC};font-size:13px;margin-bottom:20px;'>"
+        "Audit AI-generated decision text for automated classification, fairness compliance, and human review routing."
+        "</p>",
+        unsafe_allow_html=True,
     )
 
-    analyze_clicked = st.button("Analyze Decision")
+    user_text = st.text_area(
+        "AI-Generated Decision / Explanation Text",
+        height=140,
+        placeholder="Paste AI text here... e.g. 'The loan application is approved. Applicant income is $82,000 with credit score 740, and existing debt-to-income ratio is below 20%. Repayment capacity is strong.'"
+    )
 
-    if analyze_clicked or user_text:
+    col1, _ = st.columns([1.5, 4])
+    with col1:
+        analyze_clicked = st.button("Analyze Decision", type="primary", use_container_width=True)
+
+    if analyze_clicked or (user_text and user_text.strip()):
         if not user_text.strip():
-            st.info("Please paste or type text to analyze.")
+            st.warning("Please paste or type AI text to evaluate.")
             return
 
         from text_analyzer import analyze_ai_text
         result = analyze_ai_text(user_text)
 
-        st.markdown("---")
+        st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
 
-        # Very basic 3-part summary
-        k1, k2, k3 = st.columns(3)
-        with k1:
-            st.markdown("**1. AI Decision**")
-            st.markdown(f"### {result.detected_decision}")
-        with k2:
-            st.markdown("**2. Is it Fair?**")
-            if "WARNING" in result.fairness_status or "BIASED" in result.fairness_status:
-                st.markdown("### ⚠️ Biased / Warning")
-            else:
-                st.markdown("### ✅ Fair")
-        with k3:
-            st.markdown("**3. Human Review?**")
-            if result.requires_human_review:
-                st.markdown("### 👤 Yes (Required)")
-            else:
-                st.markdown("### ⚡ No (Auto-Approve)")
+        # 3 Clean Result Cards
+        c1, c2, c3 = st.columns(3)
 
-        st.markdown("---")
+        with c1:
+            dec_color = ACCENT if "APPROV" in result.detected_decision else ("#B04020" if "REJECT" in result.detected_decision else WARNING)
+            st.markdown(
+                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
+                    <div class="panel-title">1. AI Decision Outcome</div>
+                    <div style="font-size:22px;font-weight:700;color:{dec_color};line-height:1.2;margin:6px 0;">{result.detected_decision}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">Confidence: <b>{result.decision_confidence}</b></div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
 
-        st.markdown(f"**Reason:** {result.summary}")
+        with c2:
+            is_fair = not ("WARNING" in result.fairness_status or "BIASED" in result.fairness_status)
+            fair_color = ACCENT if is_fair else WARNING
+            fair_title = "Fair & Unbiased" if is_fair else "Demographic Alert"
+            fair_desc = "No prohibited attributes cited" if is_fair else "Contains sensitive demographic terms"
+            st.markdown(
+                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
+                    <div class="panel-title">2. Fairness Status</div>
+                    <div style="font-size:22px;font-weight:700;color:{fair_color};line-height:1.2;margin:6px 0;">{fair_title}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">{fair_desc}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+
+        with c3:
+            rev_color = WARNING if result.requires_human_review else ACCENT
+            rev_title = f"Required ({result.review_urgency})" if result.requires_human_review else "Not Required"
+            rev_desc = "Escalate to human underwriter" if result.requires_human_review else "Safe to proceed automatically"
+            st.markdown(
+                f"""<div class="panel" style="margin-bottom:0;min-height:115px;">
+                    <div class="panel-title">3. Human Review</div>
+                    <div style="font-size:22px;font-weight:700;color:{rev_color};line-height:1.2;margin:6px 0;">{rev_title}</div>
+                    <div style="font-size:12px;color:{TEXT_SEC};">{rev_desc}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("<div style='margin-top:16px;'></div>", unsafe_allow_html=True)
+
+        # Rationale Panel
+        st.markdown(
+            f"""<div class="panel">
+                <div class="panel-title">Evaluation Summary & Rationale</div>
+                <div style="font-size:13px;line-height:1.6;color:{TEXT_MAIN};">{result.summary}</div>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
         if result.fairness_flags:
-            st.warning("Detected Demographic Attributes: " + ", ".join(result.fairness_flags))
+            st.markdown(
+                f"""<div class="warn-banner">
+                    <b>Flagged Demographic References:</b> {', '.join(result.fairness_flags)}
+                </div>""",
+                unsafe_allow_html=True,
+            )
 
-        st.markdown("---")
-        st.markdown("**Future Scope:**")
-        st.caption(
-            "In future system updates, this text analysis module will be directly connected to the cloud AI pipeline "
-            "as an automated real-time guardrail, intercepting unfair or uncertain AI outputs before they are finalized."
+        # Future Scope Panel
+        st.markdown(
+            f"""<div class="panel" style="border-left:3px solid {ACCENT};">
+                <div class="panel-title">Future Scope & Cloud Pipeline</div>
+                <div style="font-size:13px;line-height:1.6;color:{TEXT_SEC};">
+                    In the next phase, this text evaluator will be integrated as an automated <b>LLM-as-a-Judge</b> proxy service in the cloud.
+                    All customer-facing explanations and automated AI recommendations will be intercepted in real-time to prevent bias and ensure full regulatory compliance.
+                </div>
+            </div>""",
+            unsafe_allow_html=True,
         )
 
 
@@ -999,9 +1020,9 @@ def main():
 
     with st.sidebar:
         st.markdown(
-            f"<div style='font-size:13px;font-weight:700;color:{TEXT_MAIN};"
-            "padding:8px 0 4px 0;border-bottom:1px solid #E0DFD7;"
-            "margin-bottom:14px'>Responsible AI Framework</div>",
+            f"<div style='font-size:14px;font-weight:700;color:{TEXT_MAIN};"
+            "padding:10px 0 6px 0;border-bottom:1px solid #E0DFD7;"
+            "margin-bottom:16px'>Responsible AI Framework</div>",
             unsafe_allow_html=True,
         )
         page = st.radio(
@@ -1013,12 +1034,6 @@ def main():
                 "Model Evaluation",
             ],
             label_visibility="collapsed",
-        )
-        st.markdown(
-            f"<div style='font-size:11px;color:{TEXT_SEC};margin-top:24px;'>"
-            "Academic prototype · Synthetic data only<br>"
-            "Not for production use.</div>",
-            unsafe_allow_html=True,
         )
 
     if page == "AI Text Audit":
